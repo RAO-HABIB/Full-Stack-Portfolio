@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 
 interface RoundCarouselItem {
   src: string;
@@ -28,7 +29,7 @@ const DEFAULT_ITEMS: RoundCarouselItem[] = [
   { src: "https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/e60dd7f7-a44f-40a7-df62-095b19cd8700/w=800", name: "Tech" },
 ];
 
-function __OriginkitBase_RoundCarousel({
+function OriginkitBaseRoundCarousel({
   items = DEFAULT_ITEMS,
   imageWidth = 130, // Slightly wider for text
   imageHeight = 160, // Taller to fit the text below the image
@@ -178,7 +179,7 @@ function __OriginkitBase_RoundCarousel({
                     boxShadow: "0 10px 30px rgba(0,0,0,0.1)", // Softer shadow for light mode
                   }}
                 >
-                  {src && <img src={src} alt={item.name} style={{ width: "55%", height: "55%", objectFit: "contain", filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))" }} draggable={false} />}
+                  {src && <Image src={src} alt="" width={72} height={88} style={{ width: "55%", height: "55%", objectFit: "contain", filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))" }} draggable={false} />}
                   <span style={{ color: "rgba(0, 0, 0, 0.8)", fontSize: "14px", fontWeight: 700, letterSpacing: "0.5px", fontFamily: "system-ui, sans-serif" }}>{item.name}</span>
                 </div>
                 {/* Back Face */}
@@ -189,7 +190,7 @@ function __OriginkitBase_RoundCarousel({
                     filter: `brightness(${innerDim / 5})`, // Less dimming for light mode
                   }}
                 >
-                  {src && <img src={src} alt={item.name} style={{ width: "55%", height: "55%", objectFit: "contain", opacity: 0.6 }} draggable={false} />}
+                  {src && <Image src={src} alt="" width={72} height={88} style={{ width: "55%", height: "55%", objectFit: "contain", opacity: 0.6 }} draggable={false} />}
                   <span style={{ color: "rgba(0, 0, 0, 0.4)", fontSize: "14px", fontWeight: 700, letterSpacing: "0.5px", fontFamily: "system-ui, sans-serif" }}>{item.name}</span>
                 </div>
               </div>
@@ -209,8 +210,8 @@ const __originkitPresetProps = {
   "tilt": -5,
   "cornerRadius": 24,
   "innerDim": 2.5
-};
+} satisfies RoundCarouselProps;
 
-export default function RoundCarousel(props: Record<string, unknown>) {
-  return <__OriginkitBase_RoundCarousel {...(__originkitPresetProps as Record<string, unknown>)} {...props} />;
+export default function RoundCarousel(props: RoundCarouselProps) {
+  return <OriginkitBaseRoundCarousel {...__originkitPresetProps} {...props} />;
 }

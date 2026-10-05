@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, type PanInfo } from "framer-motion";
+import Image from "next/image";
 import { portfolioData } from "@/constants/data";
 import { ArrowUpRight, ExternalLink, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import Link from "next/link";
@@ -34,7 +35,7 @@ export default function Projects() {
   }, [projects.length]);
 
   const handleDragEnd = useCallback(
-    (_: any, info: { offset: { x: number } }) => {
+    (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
       const threshold = 40;
       if (info.offset.x > threshold) {
         navigatePrev();
@@ -152,6 +153,14 @@ export default function Projects() {
               isDraggingRef.current = true;
             }}
             onDragEnd={handleDragEnd}
+            onKeyDown={(event) => {
+              if (event.key === "ArrowLeft") navigatePrev();
+              if (event.key === "ArrowRight") navigateNext();
+            }}
+            tabIndex={0}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Featured projects"
           >
             {projects.map((project, index) => {
               const position = getCardPosition(index);
@@ -185,6 +194,15 @@ export default function Projects() {
                     if (isDraggingRef.current) return;
                     if (!isActive) navigateTo(index);
                   }}
+                  onKeyDown={(event) => {
+                    if (!isActive && (event.key === "Enter" || event.key === " ")) {
+                      event.preventDefault();
+                      navigateTo(index);
+                    }
+                  }}
+                  role={isActive ? undefined : "button"}
+                  tabIndex={isActive ? -1 : 0}
+                  aria-label={isActive ? undefined : `Show ${project.title}`}
                   className={`rounded-2xl overflow-hidden transition-all duration-300 ${isActive
                       ? "shadow-[0_0_80px_rgba(106,113,223,0.15)] ring-1 ring-white/20 cursor-default"
                       : "shadow-2xl cursor-pointer"
@@ -209,13 +227,12 @@ export default function Projects() {
 
                       {/* Image Viewport */}
                       <div className="relative flex-1 overflow-hidden group bg-black">
-                        <img
+                        <Image
                           src={project.image}
-                          alt={project.title}
+                          alt={`Screenshot of ${project.title}`}
+                          fill
+                          sizes="(max-width: 639px) 320px, (max-width: 1023px) 450px, 550px"
                           className="w-full h-full object-cover object-top select-none pointer-events-none transition-transform duration-1000 group-hover:scale-105 opacity-90"
-                          onError={(e) => {
-                            e.currentTarget.style.display = "none";
-                          }}
                         />
                         {/* Inner shadow for depth */}
                         <div className="absolute inset-0 pointer-events-none shadow-[inset_0_4px_20px_rgba(0,0,0,0.5)]" />
@@ -287,6 +304,8 @@ export default function Projects() {
           <div className="flex items-center gap-8">
             <button
               onClick={navigatePrev}
+              type="button"
+              aria-label="Show previous project"
               className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-dark transition-all duration-300 backdrop-blur-sm cursor-pointer"
             >
               <ChevronLeft size={20} />
@@ -297,6 +316,9 @@ export default function Projects() {
                 <button
                   key={i}
                   onClick={() => navigateTo(i)}
+                  type="button"
+                  aria-label={`Show project ${i + 1}: ${projects[i].title}`}
+                  aria-current={i === activeIndex ? "true" : undefined}
                   className={`transition-all duration-300 rounded-full ${i === activeIndex
                       ? "w-8 h-2 bg-primary"
                       : "w-2 h-2 bg-white/20 hover:bg-white/50"
@@ -307,6 +329,8 @@ export default function Projects() {
 
             <button
               onClick={navigateNext}
+              type="button"
+              aria-label="Show next project"
               className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-dark transition-all duration-300 backdrop-blur-sm cursor-pointer"
             >
               <ChevronRight size={20} />

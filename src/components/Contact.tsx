@@ -1,10 +1,25 @@
 "use client";
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import { motion } from "framer-motion";
 import { portfolioData } from "@/constants/data";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 
 export default function Contact() {
+  const [status, setStatus] = useState("");
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const name = String(form.get("name") ?? "").trim();
+    const email = String(form.get("email") ?? "").trim();
+    const subject = String(form.get("subject") ?? "Portfolio enquiry").trim();
+    const message = String(form.get("message") ?? "").trim();
+    const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
+    const mailto = `mailto:${portfolioData.personal.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    setStatus("Your email app is opening with the message ready to send.");
+    window.location.href = mailto;
+  };
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -36,7 +51,7 @@ export default function Contact() {
             
             <div>
               <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold font-antonio uppercase mb-4">
-                Let's <span className="text-primary">Connect</span>
+                Let&apos;s <span className="text-primary">Connect</span>
               </motion.h2>
               <motion.p variants={itemVariants} className="text-gray mb-12">
                 Interested in working together? Feel free to reach out for collaborations or just a friendly hello.
@@ -61,7 +76,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <p className="text-gray text-sm mb-1">Phone</p>
-                    <a href={`tel:${portfolioData.personal.phone}`} className="text-white hover:text-primary transition-colors font-medium">
+                    <a href="tel:+923037228833" className="text-white hover:text-primary transition-colors font-medium">
                       {portfolioData.personal.phone}
                     </a>
                   </div>
@@ -74,7 +89,7 @@ export default function Contact() {
                   <div>
                     <p className="text-gray text-sm mb-1">Location</p>
                     <p className="text-white font-medium">
-                      {portfolioData.personal.address.split(",")[1].trim() + ", " + portfolioData.personal.address.split(",")[2].trim()}
+                      Rawalpindi, Pakistan
                     </p>
                   </div>
                 </motion.div>
@@ -84,13 +99,17 @@ export default function Contact() {
 
           {/* Contact Form */}
           <div className="p-12 lg:w-3/5">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <motion.div variants={itemVariants}>
                   <label htmlFor="name" className="block text-sm font-medium text-dark mb-2">Your Name</label>
                   <input 
                     type="text" 
                     id="name" 
+                    name="name"
+                    autoComplete="name"
+                    required
+                    maxLength={80}
                     className="w-full px-4 py-3 rounded-lg bg-light border border-lightGray focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                     placeholder="John Doe"
                   />
@@ -100,6 +119,10 @@ export default function Contact() {
                   <input 
                     type="email" 
                     id="email" 
+                    name="email"
+                    autoComplete="email"
+                    required
+                    maxLength={120}
                     className="w-full px-4 py-3 rounded-lg bg-light border border-lightGray focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                     placeholder="john@example.com"
                   />
@@ -111,6 +134,9 @@ export default function Contact() {
                 <input 
                   type="text" 
                   id="subject" 
+                  name="subject"
+                  required
+                  maxLength={120}
                   className="w-full px-4 py-3 rounded-lg bg-light border border-lightGray focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                   placeholder="How can I help you?"
                 />
@@ -120,6 +146,9 @@ export default function Contact() {
                 <label htmlFor="message" className="block text-sm font-medium text-dark mb-2">Message</label>
                 <textarea 
                   id="message" 
+                  name="message"
+                  required
+                  maxLength={2000}
                   rows={5}
                   className="w-full px-4 py-3 rounded-lg bg-light border border-lightGray focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors resize-none"
                   placeholder="Write your message here..."
@@ -134,6 +163,7 @@ export default function Contact() {
                 Send Message
                 <Send size={18} />
               </motion.button>
+              <p className="min-h-6 text-sm text-gray" role="status" aria-live="polite">{status}</p>
             </form>
           </div>
         </motion.div>

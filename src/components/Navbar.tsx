@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { portfolioData } from "@/constants/data";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,6 +69,9 @@ export default function Navbar() {
         <button
           className={`md:hidden p-2 rounded-full transition-colors ${scrolled ? "text-black bg-neutral-100" : "text-white bg-white/20"}`}
           onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-navigation"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -84,7 +86,7 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-white border-t border-lightGray overflow-hidden"
           >
-            <div className="px-4 py-6 flex flex-col gap-4">
+            <div id="mobile-navigation" className="px-4 py-6 flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -104,7 +106,7 @@ export default function Navbar() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
                 </span>
-                Let's Talk
+                Let&apos;s Talk
               </Link>
             </div>
           </motion.div>

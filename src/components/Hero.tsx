@@ -9,11 +9,12 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(() => {});
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.defaultMuted = true;
+    video.muted = true;
+    video.play().catch(() => {});
   }, []);
 
   return (
@@ -26,9 +27,10 @@ export default function Hero() {
           loop
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           poster="/hero-poster.webp"
           className="absolute inset-0 w-full h-full object-cover"
+          aria-hidden="true"
         >
           <source src="/hero.mp4" type="video/mp4" />
         </video>
@@ -49,9 +51,10 @@ export default function Hero() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="flex flex-col text-left self-start mt-8 md:mt-0"
           >
-            <span className="text-[3.5rem] sm:text-[4.5rem] md:text-6xl lg:text-[6.5rem] xl:text-[8rem] 2xl:text-[10rem] font-bold font-antonio uppercase tracking-tighter text-white leading-[0.85] drop-shadow-2xl">
+            <h1 className="text-[3.5rem] sm:text-[4.5rem] md:text-6xl lg:text-[6.5rem] xl:text-[8rem] 2xl:text-[10rem] font-bold font-antonio uppercase tracking-tighter text-white leading-[0.85] drop-shadow-2xl">
               FULL <span className="text-purple-400">STACK</span>
-            </span>
+              <span className="block md:hidden">DEVELOPER</span>
+            </h1>
           </motion.div>
 
           {/* Right side: DEVELOPER */}
@@ -61,7 +64,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
             className="flex flex-col text-right self-end md:self-auto items-end mt-4 md:mt-0"
           >
-            <span className="text-[3.5rem] sm:text-[4.5rem] md:text-6xl lg:text-[6.5rem] xl:text-[8rem] 2xl:text-[10rem] font-bold font-antonio uppercase tracking-tighter text-white leading-[0.85] drop-shadow-2xl whitespace-nowrap">
+            <span aria-hidden="true" className="hidden md:block text-[3.5rem] sm:text-[4.5rem] md:text-6xl lg:text-[6.5rem] xl:text-[8rem] 2xl:text-[10rem] font-bold font-antonio uppercase tracking-tighter text-white leading-[0.85] drop-shadow-2xl whitespace-nowrap">
               DEVELOPER
             </span>
 
