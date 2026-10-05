@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Antonio, Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const antonio = Antonio({
+  variable: "--font-antonio",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -21,8 +21,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${antonio.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preload" as="image" href="/hero-poster.webp" type="image/webp" />
+        <link rel="preload" as="video" href="/hero.mp4" type="video/mp4" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
